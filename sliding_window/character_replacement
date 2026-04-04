@@ -1,0 +1,47 @@
+class Solution:
+    def characterReplacement(self, s: str, k: int) -> int:
+        # LONGEST REPEATING CHARACTER REPLACEMENT
+        # ----------------------------------------
+        # PROBLEM: find the longest substring where you can replace
+        # at most k characters to make all characters the same
+        #
+        # KEY INSIGHT: a window is valid when
+        # window length - most frequent char count <= k
+        # because we keep the most frequent char and replace everything else
+        #
+        # WHERE I GOT STUCK:
+        # - count[s[r]] = 1 + count.get(s[r], 0)
+        #   the .get(s[r], 0) is just crash protection for the first time
+        #   we see a character — returns 0 instead of KeyError so we can
+        #   safely add 1 to it
+        # - max(count.values()) just returns the highest value in the dictionary
+        #   which tells us the most frequent character count in the window
+        # - result = max(result, r - l + 1) stores the window LENGTH not the
+        #   actual characters — because the problem asks for length not the string
+        #   and we have already validated the window is theoretically fixable
+        #
+        # HOW WE SOLVED IT:
+        # - use a sliding window with L and R pointers
+        # - expand R every iteration adding the new character to count
+        # - if window becomes invalid use while loop to advance L
+        #   removing characters one by one until window is valid again
+        # - record the longest valid window size at each iteration
+        #
+        # TIME COMPLEXITY: O(n) — R moves through string once
+        #                         L only ever moves forward never backward
+        # SPACE COMPLEXITY: O(1) — count dictionary has at most 26 keys
+        #                          since there are only 26 uppercase letters
+
+        count = {}
+        result = 0
+
+        l = 0
+        for r in range(len(s)):
+            count[s[r]] = 1 + count.get(s[r], 0)
+
+            while r - l + 1 - max(count.values()) > k:
+                count[s[l]] -= 1
+                l += 1
+
+            result = max(result, r - l + 1)
+        return result
