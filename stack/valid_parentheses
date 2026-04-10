@@ -1,0 +1,68 @@
+# ============================================================
+# VALID PARENTHESES - STUDY NOTES
+# ============================================================
+#
+# TIME COMPLEXITY: O(n) - we loop through the string once
+# SPACE COMPLEXITY: O(n) - stack can grow up to n/2 in the
+#                          worst case e.g. "((((("
+#
+# ============================================================
+# WHAT THE PROBLEM IS ASKING
+# ============================================================
+# Given a string of brackets, determine if it is valid.
+# Valid means every opening bracket has a corresponding
+# closing bracket in the correct order.
+#
+# ============================================================
+# KEY INSIGHTS
+# ============================================================
+# - Use a stack to track unmatched opening brackets
+# - Use a hash map to pair closing brackets with opening brackets
+# - The stack only ever holds opening brackets
+# - The top of the stack is always the most recently
+#   unmatched opening bracket
+# - If the stack is empty at the end, all brackets matched
+#
+# ============================================================
+# THINGS I STRUGGLED WITH
+# ============================================================
+# 1. Hash map direction — closing brackets are keys and
+#    opening brackets are values because we look up the
+#    hash map when we encounter a closing bracket, not
+#    an opening bracket
+#
+# 2. What gets pushed onto the stack — only opening brackets
+#    ever get pushed. Closing brackets trigger a pop and
+#    match check instead
+#
+# 3. stack.pop vs stack.pop() — forgetting the () means
+#    the method never actually gets called. Python won't
+#    throw an error so it's a sneaky bug to find
+#
+# 4. if stack vs if not stack — if stack means "stack has
+#    something in it", if not stack means "stack is empty"
+#
+# 5. The final return — return not stack returns True if
+#    the stack is empty (all brackets matched) and False
+#    if there are unmatched opening brackets left over
+#
+# ============================================================
+# THE SOLUTION
+# ============================================================
+class Solution:
+    def isValid(self, s: str) -> bool:
+
+        match = {']':'[', ')':'(', '}':'{'}
+        stack = []
+
+        for c in s:
+            if c in match:
+                if stack and stack[-1] == match[c]:
+                    stack.pop()
+                else:
+                    return False
+            else:
+                stack.append(c)
+        
+        return True if not stack else False
+            
