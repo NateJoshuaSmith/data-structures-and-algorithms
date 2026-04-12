@@ -1,0 +1,86 @@
+
+# ============================================================
+# EVALUATE REVERSE POLISH NOTATION - STUDY NOTES
+# ============================================================
+#
+# TIME COMPLEXITY: O(n) - loop through tokens once
+# SPACE COMPLEXITY: O(n) - stack can grow up to size of input
+#
+# ============================================================
+# WHAT THE PROBLEM IS ASKING
+# ============================================================
+# Evaluate a math expression given in Reverse Polish Notation
+# and return the result as an integer
+#
+# ============================================================
+# KEY INSIGHTS
+# ============================================================
+# - Use a stack to store numbers
+# - Every operator always pops exactly two numbers
+# - Push the result back onto the stack after each operation
+# - First pop is the right operand, second pop is left operand
+# - Order matters for - and / but not for + and *
+# - Convert string tokens to int before pushing onto stack
+# - At the end there is always exactly one number left on the stack
+#
+# ============================================================
+# THINGS I STRUGGLED WITH
+# ============================================================
+# - The ordering of l and r when popping from the stack
+# - Remembering to do l - r not r - l for subtraction
+# - Remembering to do int(l / r) not r / l for division
+# - Remembering to convert string tokens to int with int(c)
+# - Remembering to push the result back onto the stack
+#
+# ============================================================
+# THE SOLUTION
+# ============================================================
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        stack = []
+
+        for c in tokens:
+            if c == '+':
+                r, l = stack.pop(), stack.pop()
+                stack.append(r + l)
+            elif c == '-':
+                r, l = stack.pop(), stack.pop()
+                stack.append(l - r)
+            elif c == '/':
+                r, l = stack.pop(), stack.pop()
+                stack.append(int(l / r))
+            elif c == '*':
+                r, l = stack.pop(), stack.pop()
+                stack.append(r * l)
+            else:
+                stack.append(int(c))
+                
+        return stack[0]
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        stack = []
+        result = 0
+
+        for c in tokens:
+            if c == '+':
+                r, l = stack.pop(), stack.pop()
+                stack.append(r + l)
+            elif c == '-':
+                r, l = stack.pop(), stack.pop()
+                stack.append(l - r)
+            elif c == '/':
+                r, l = stack.pop(), stack.pop()
+                stack.append(int(l / r))
+            elif c == '*':
+                r, l = stack.pop(), stack.pop()
+                stack.append(r * l)
+            else:
+                stack.append(int(c))
+
+        return stack[0]
+
+                    
+
+
+
+        
