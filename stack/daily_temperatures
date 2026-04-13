@@ -1,0 +1,63 @@
+# ============================================================
+# DAILY TEMPERATURES - STUDY NOTES
+# ============================================================
+#
+# TIME COMPLEXITY: O(n) - each temp is pushed and popped once
+# SPACE COMPLEXITY: O(n) - stack and result array both grow to n
+#
+# ============================================================
+# PATTERN
+# ============================================================
+# Monotonic Stack - store elements in the stack until a
+# condition is met, then pop and process
+#
+# ============================================================
+# WHAT THE PROBLEM IS ASKING
+# ============================================================
+# Return a list where each element is the number of days you
+# have to wait until a warmer temperature. If no warmer day
+# exists return 0.
+#
+# ============================================================
+# KEY INSIGHTS
+# ============================================================
+# - Use a stack to store (temperature, index) pairs
+# - When current temp is warmer than top of stack, pop and calculate days
+# - Formula: current index - stored index = number of days
+# - Use a while loop because one temp can be the answer for multiple previous temps
+# - Initialize result with 0s so unmatched temps are already handled
+# - enumerate gives both index and value in the loop
+#
+# ============================================================
+# THINGS I STRUGGLED WITH
+# ============================================================
+# - Recognizing that we need to store indices not just temperatures
+# - Understanding why while loop is needed instead of if
+# - Understanding that stack stores tuples of (temp, index)
+# - Accessing tuple values with stack[-1][0] and stack[-1][1]
+#
+# ============================================================
+# THE SOLUTION
+# ============================================================
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        
+        # result array prefilled with 0s
+        result = [0] * len(temperatures)
+        
+        # stack stores (temperature, index) pairs
+        stack = []
+        
+        for i, t in enumerate(temperatures):
+            
+            # while current temp is warmer than top of stack
+            while stack and t > stack[-1][0]:
+                
+                # pop and calculate days waited
+                stackT, stackInd = stack.pop()
+                result[stackInd] = i - stackInd
+            
+            # always push current temp and index
+            stack.append((t, i))
+        
+        return result
