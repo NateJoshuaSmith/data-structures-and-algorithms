@@ -1,0 +1,73 @@
+# ============================================================
+# BINARY SEARCH - STUDY NOTES
+# ============================================================
+#
+# TIME COMPLEXITY: O(log n) - cuts search space in half each step
+# SPACE COMPLEXITY: O(1) - only using pointers, no extra space
+#
+# ============================================================
+# PATTERN
+# ============================================================
+# Binary Search - eliminate half the search space each step
+# by comparing the middle element to the target
+#
+# ============================================================
+# WHEN TO USE BINARY SEARCH
+# ============================================================
+# - Sorted array + searching for a specific value
+# - Can you eliminate half the possibilities each step?
+# - Looking for a minimum/maximum that satisfies a condition
+# - Key question: "am I searching for something specific?"
+#
+# ============================================================
+# KEY INSIGHTS
+# ============================================================
+# - Array MUST be sorted for binary search to work
+# - l and r are always INDICES not values
+# - m = l + (r - l) // 2 is safer than (l + r) // 2
+#   because it avoids overflow in other languages
+# - r = m - 1 and l = m + 1 exclude the already checked
+#   middle element to avoid infinite loops
+# - while l <= r not l != r because l == r means one
+#   element left that still needs to be checked
+# - return -1 when l > r means search space is empty
+#
+# ============================================================
+# THINGS I STRUGGLED WITH
+# ============================================================
+# - l and r are always indices not values
+# - why l <= r and not l != r
+# - why m - 1 and m + 1 instead of just m
+# - m = l + (r - l) // 2 is just finding the midpoint
+#   safely by taking the gap, halving it, adding l back
+# - stop condition is when l > r meaning search space empty
+#
+# ============================================================
+# THE SOLUTION
+# ============================================================
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        
+        # left and right pointers define search space
+        l, r = 0, len(nums) - 1
+        
+        # keep searching while search space is valid
+        while l <= r:
+            
+            # find middle index safely to avoid overflow
+            m = l + ((r - l) // 2)
+            
+            # middle too big → search left half
+            if nums[m] > target:
+                r = m - 1
+            
+            # middle too small → search right half
+            elif nums[m] < target:
+                l = m + 1
+            
+            # found it! return the index
+            else:
+                return m
+        
+        # target not found
+        return -1
