@@ -1,0 +1,71 @@
+# ============================================================
+# CAR FLEET - STUDY NOTES
+# ============================================================
+#
+# TIME COMPLEXITY: O(n log n) - dominated by the sort
+# SPACE COMPLEXITY: O(n) - stack and pairs can grow to n
+#
+# ============================================================
+# PATTERN
+# ============================================================
+# Monotonic Stack - process cars closest to target first
+# and use a stack to track fleet leaders
+#
+# ============================================================
+# WHAT THE PROBLEM IS ASKING
+# ============================================================
+# Given n cars with positions and speeds driving toward a
+# target, return the number of fleets that reach the target.
+# Cars that catch up to a slower car ahead form a fleet and
+# travel at the slower car's speed.
+#
+# ============================================================
+# KEY INSIGHTS
+# ============================================================
+# - A car can only be blocked by a car AHEAD of it
+# - Process cars closest to target first by sorting in reverse
+# - Pair position and speed together with zip so they stay
+#   in sync when sorted
+# - Calculate arrival time with (target - position) / speed
+# - If a car arrives faster or equal to car ahead → catches up → pop
+# - If a car arrives slower than car ahead → own fleet → keep
+# - Each element left in stack = one fleet leader = one fleet
+#
+# ============================================================
+# THINGS I STRUGGLED WITH
+# ============================================================
+# - Recognizing that position and speed need to be paired
+#   together before sorting so they stay in sync
+# - Understanding why we sort closest to target first
+# - Understanding the arrival time formula (target - p) / s
+# - Understanding when to pop vs keep on the stack
+# - Understanding that stack[-1] <= stack[-2] means the car
+#   catches up to the fleet ahead
+# - Understanding that len(stack) at the end = number of fleets
+#
+# ============================================================
+# THE SOLUTION
+# ============================================================
+class Solution:
+    def carFleet(self, target: int, position: List[int], speed: List[int]) -> int:
+        
+        # pair position and speed together so they stay in sync when sorted
+        pair = [(p, s) for p, s in zip(position, speed)]
+        
+        # sort by position closest to target first
+        pair.sort(reverse=True)
+        
+        # stack stores arrival times of fleet leaders
+        stack = []
+        
+        for p, s in pair:
+            
+            # calculate arrival time and push onto stack
+            stack.append((target - p) / s)
+            
+            # does this car catch up to the fleet ahead?
+            if len(stack) >= 2 and stack[-1] <= stack[-2]:
+                stack.pop()  # yes → joins fleet ahead → remove it
+        
+        # each element in stack = one unique fleet
+        return len(stack)
