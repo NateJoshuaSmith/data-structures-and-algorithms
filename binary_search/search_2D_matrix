@@ -1,0 +1,78 @@
+# ============================================================
+# SEARCH A 2D MATRIX - STUDY NOTES
+# ============================================================
+#
+# TIME COMPLEXITY: O(log m + log n) - two separate binary searches
+#                  one for rows O(log m) and one for columns O(log n)
+#                  which equals O(log(m * n))
+# SPACE COMPLEXITY: O(1) - only using pointers, no extra space
+#
+# ============================================================
+# PATTERN
+# ============================================================
+# Binary Search - two separate binary searches
+# one to find the correct row, one to find the target within that row
+#
+# ============================================================
+# WHAT THE PROBLEM IS ASKING
+# ============================================================
+# Given a sorted 2D matrix where each row is sorted and the
+# first element of each row is greater than the last element
+# of the previous row, return True if target exists else False
+#
+# ============================================================
+# KEY INSIGHTS
+# ============================================================
+# - len(matrix) gives number of rows
+# - len(matrix[0]) gives number of columns (length of first row)
+# - top and bot are row boundaries just like l and r in regular binary search
+# - first loop finds correct row by checking if target falls
+#   between first and last element of current row
+# - matrix[row][0] → first element of row
+# - matrix[row][-1] → last element of row
+# - second loop is just regular binary search within correct row
+# - l and r are column boundaries, completely separate from top and bot
+#
+# ============================================================
+# THINGS I STRUGGLED WITH
+# ============================================================
+# - top and bot should use rows - 1 not cols - 1
+# - r - l not l - r when calculating midpoint
+# - top and bot track row search space
+# - l and r track column search space within correct row
+# - row stays fixed in second loop, only m changes
+# - space is O(1) because we only use pointers
+#
+# ============================================================
+# THE SOLUTION
+# ============================================================
+
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+
+        rows = len(matrix)
+        cols = len(matrix[0])
+
+        top, bot = 0, rows - 1
+        while top <= bot:
+            row = top + (bot - top) // 2
+
+            if target > matrix[row][-1]:
+                top = row + 1 
+            elif target < matrix[row][0]:
+                bot = row - 1
+            else:
+                break
+        
+        l, r = 0, cols - 1
+        while l <= r:
+
+            m = l + (r - l) // 2
+
+            if matrix[row][m] > target:
+                r = m - 1
+            elif matrix[row][m] < target:
+                l = m + 1
+            else:
+                return True
+        return False
